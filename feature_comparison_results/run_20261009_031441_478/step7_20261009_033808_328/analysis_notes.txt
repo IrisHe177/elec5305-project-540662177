@@ -1,0 +1,27 @@
+STEP 7: SEA WAVES VS CHAINSAW
+
+This pair has the largest bidirectional SVM confusion in baseline A.
+Distributions use all 40 clips per class in raw feature units.
+Examples are nearest class median RMS_mean; ties use filename.
+Selection does not use prediction correctness.
+RMS_mean is mean frame RMS, not whole-clip RMS.
+Selected examples need not be typical in all features.
+
+Hann 2048; hop 512; FFT 2048; sample rate 44100 Hz.
+Reflection padding: 1024 samples per end; 431 frames.
+Spectrograms show one-sided squared FFT magnitude.
+Both use a shared peak reference and [-80,0] dB limits.
+Frequency range: 0 to 22.05 kHz.
+Audio is unchanged. Amplitudes are not calibrated sound-pressure levels.
+
+Interpretation:
+Describe feature medians, IQRs and overlap.
+Listen to both WAVs and describe their temporal and spectral patterns.
+Example observations do not establish class-wide acoustic properties.
+Reduced confusion does not prove individual feature contributions.
+This is descriptive analysis with no retraining or parameter tuning.
+
+Pair confusion counts:
+Group A: sea waves->chainsaw 8; reverse 13; total 21.
+Group B: sea waves->chainsaw 2; reverse 8; total 10.
+Group C: sea waves->chainsaw 4; reverse 3; total 7.

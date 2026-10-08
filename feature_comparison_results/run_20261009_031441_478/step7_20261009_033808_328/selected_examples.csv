@@ -1,0 +1,3 @@
+filename,fold,class_id,category,RMS_mean,ClassMedianRMS,A_SVM_pred_id,A_SVM_pred_category,A_SVM_correct,C_SVM_pred_id,C_SVM_pred_category,C_SVM_correct
+1-28135-A-11.wav,1,4,sea_waves,0.0920329117949858,0.0925305239932639,4,sea_waves,1,4,sea_waves,1
+1-47250-B-41.wav,1,10,chainsaw,0.144906388182941,0.144316243996296,4,sea_waves,0,4,sea_waves,0

@@ -1,0 +1,5 @@
+Model,ComparedWithA,BothCorrect,CorrectedErrors,IntroducedErrors,BothWrong,DeltaAccuracy_pp
+SVM_RBF,B,181,62,78,79,-4
+SVM_RBF,C,245,49,14,92,8.75
+kNN_5,B,162,65,67,106,-0.5
+kNN_5,C,212,35,17,136,4.5
