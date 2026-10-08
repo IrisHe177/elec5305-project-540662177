@@ -1,0 +1,11 @@
+TrueClassID,TrueCategory,PredClass1,PredClass2,PredClass3,PredClass4,PredClass5,PredClass6,PredClass7,PredClass8,PredClass9,PredClass10
+1,dog,24,3,0,1,1,1,10,0,0,0
+2,rooster,6,17,0,0,0,6,11,0,0,0
+3,rain,0,0,20,9,3,0,0,1,4,3
+4,sea_waves,1,1,3,31,0,0,0,0,2,2
+5,crackling_fire,0,1,2,3,29,0,0,2,2,1
+6,crying_baby,2,4,0,0,0,28,1,0,0,5
+7,sneezing,1,1,0,0,1,0,35,2,0,0
+8,clock_tick,2,1,0,0,11,1,10,12,2,1
+9,helicopter,0,0,8,2,0,0,2,0,27,1
+10,chainsaw,0,0,9,15,2,0,2,2,4,6
