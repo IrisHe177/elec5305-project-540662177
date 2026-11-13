@@ -46,7 +46,7 @@ Mean accuracy (%) over the six noises, Gaussian SVM with nested tuning, 400 out-
 
 | Location | Contents |
 |---|---|
-| `final/code/` | Final experiment: Live Scripts `s0`–`s6` and the helper functions they call |
+| `final/code/` | Final experiment: the seven Live Scripts (run order under *How to run*) and the helper functions they call |
 | `final/results/` | Results of the final runs (tables, figures, `.mat`), cached noisy features in `noise_features/`, listening examples in `s4_noise_…/examples/` |
 | `final/report/` | Final report (PDF) |
 | root `*.mlx`, `ESC10_prepared/`, `baseline_results/`, `feature_comparison_results/` | Progress-stage pipeline. Its clean features (`features_ABC.mat`) are the input to the final experiment |
