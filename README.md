@@ -1,184 +1,96 @@
-# Environmental Sound Classification Using Temporal and Spectral Audio Features
+# Robustness of Interpretable Temporal and Spectral Features to Real-World Background Noise
 
-ELEC5305 – Acoustics, Speech and Signal Processing  
-The University of Sydney  
-Student ID: 540662177
+ELEC5305 Acoustics, Speech and Signal Processing · The University of Sydney
+Xinran He · SID 540662177
 
-## Project Overview
+**Final report:** [final/report/ELEC5305_Final_Report_XinranHe.pdf](final/report/ELEC5305_Final_Report_XinranHe.pdf) · **Video:** _link to be added_ · **Proposal:** [PDF](ELEC5305%20Project%20Proposal.pdf) · **Progress report:** [PDF](ELEC5305_Project_Progress_Report.pdf)
 
-This project investigates how temporal and spectral audio features contribute to environmental sound classification in MATLAB.
+## Research question
 
-The main goal is to evaluate whether simple, interpretable descriptors can distinguish sound categories and improve an MFCC-based baseline. Support vector machines (SVM) are used as the primary classifier, with k-nearest neighbours (kNN) as a reference.
+> How do different types of real-world background noise degrade ESC-10 classification based on interpretable temporal and spectral features, and how does this compare with a pretrained deep audio network?
 
-This repository records the implementation, experimental results, and ongoing project development.
+The project reproduces the MFCC + ZCR baseline of Piczak (2015) on ESC-10 under the official folds. It then:
 
-## Research Questions
+- compares temporal-only, spectral-only and combined handcrafted features;
+- adds a pretrained deep reference (YAMNet embeddings classified with the same SVM);
+- mixes every test clip with six real DEMAND noises at five SNRs;
+- tests one modification: multi-condition (noise-augmented) training, including noise types never seen in training.
 
-- How well does an MFCC + zero-crossing rate baseline classify environmental sounds?
-- How effective are simple temporal and spectral descriptors on their own?
-- Does combining these descriptors with MFCCs improve classification?
-- Which sound categories remain difficult to distinguish?
+The interpretable features are used to explain *why* accuracy changes, not only to measure it.
 
-## Dataset
+## Key results
 
-The experiments use ESC-10, the predefined 10-class subset of ESC-50.
+Mean accuracy (%) over the six noises, Gaussian SVM with nested tuning, 400 out-of-fold predictions:
 
-- 400 audio clips: 40 clips per class.
-- Each clip is 5 seconds long, mono, and sampled at 44.1 kHz.
-- Classes: dog, rooster, rain, sea waves, crackling fire, crying baby, sneezing, clock tick, helicopter, and chainsaw.
-- The official five folds are preserved.
-- Each fold contains 80 test clips, with the remaining 320 used for training.
-- Dataset preparation checks audio properties, class balance, and source separation between folds.
+| Group | Features | Dims | Clean | 20 dB | 10 dB | 0 dB | 0 dB after MCT (matched / unseen noise) |
+|---|---|---|---|---|---|---|---|
+| T | RMS, ZCR (temporal) | 4 | 63.0 | 52.5 | 42.4 | 30.1 | 37.3 / 32.5 |
+| S | centroid, spread, flatness, rolloff (spectral) | 8 | 55.0 | 41.2 | 32.8 | 22.0 | 41.0 / 30.5 |
+| B | T + S | 12 | 69.3 | **58.4** | **45.2** | 30.3 | 50.4 / 42.9 |
+| A | MFCC + ZCR (Piczak baseline) | 26 | 69.0 | 26.9 | 20.7 | 14.0 | 55.8 / 42.9 |
+| C | MFCC + T + S | 36 | **73.0** | 41.8 | 32.0 | 25.3 | **66.8 / 53.8** |
+| D | YAMNet embeddings | 2048 | 96.5 | 86.3 | 78.9 | 63.6 | 87.6 / 78.1 |
 
-The original proposal considered selecting 5–8 classes. The implemented study uses the predefined ESC-10 subset to provide a balanced dataset and a reproducible evaluation protocol.
+**What the results show:**
 
-Dataset source: [ESC-50 repository](https://github.com/karolpiczak/ESC-50)
+- **Clean data:** temporal features beat spectral features (p = 0.005), six interpretable descriptors match the MFCC baseline, and combining them is best among handcrafted sets (+4.0 points over A, p = 0.04).
+- **MFCCs fail first under noise.** Clean-trained MFCC models collapse already at 20 dB. At 20 dB, MFCC means shift by 0.5–1.25 within-class standard deviations, against 0.03–0.18 for the power-weighted descriptors. The reason is log compression of near-empty bands and of the digital silence that pads 10% of all ESC-10 frames.
+- **Predictions get absorbed by one class.** Under noise, clean-trained MFCC models label most clips "clock tick". YAMNet's errors are semantic instead: river noise is labelled sea waves, traffic is labelled helicopter.
+- **Multi-condition training is the modification that works.** It more than doubles the 0 dB accuracy of the combined handcrafted set and generalises to unseen noise types, at a cost of under 2 points on clean data.
 
-## Methodology
+![Accuracy vs SNR](final/results/s4_noise_20261109_210520/accuracy_vs_snr.png)
+![Feature drift by family](final/results/s6_analysis_20261109_211413/feature_family_drift.png)
+![Multi-condition training](final/results/s5_mct_20261109_211406/mct_vs_snr.png)
 
-The processing pipeline is:
-
-Audio validation → frame-based feature extraction → clip-level aggregation → training-fold standardization → classification → evaluation.
-
-### Audio Processing
-
-The current configuration uses:
-
-- Sample rate: 44,100 Hz.
-- Main analysis frame length: 2,048 samples, approximately 46.44 ms.
-- Hop length: 512 samples, approximately 11.61 ms.
-- Periodic Hann window for MFCC and spectral analysis.
-- FFT length: 2,048 samples.
-- Reflection padding for centred main analysis frames.
-- RMS calculated from unwindowed frames.
-- ZCR calculated from unwindowed 512-sample blocks, including the final partial block.
-- Spectral rolloff threshold: 90%.
-
-No resampling, silence trimming, denoising, pre-emphasis, or audio amplitude normalization is applied.
-
-Preserving the original amplitude retains RMS differences between recordings. However, RMS can also be affected by recording gain and microphone distance, so it is not interpreted as calibrated sound-pressure level.
-
-### Feature Configurations
-
-Each frame-level feature is summarized using its mean and population standard deviation across the clip.
-
-| Group | Features | Dimensions |
-|---|---|---:|
-| A: Baseline | 12 MFCCs + ZCR | 26 |
-| B: Interpretable descriptors | RMS + ZCR + spectral centroid + spectral spread + spectral flatness + spectral rolloff | 12 |
-| C: Combined | 12 MFCCs + ZCR + RMS + spectral centroid + spectral spread + spectral flatness + spectral rolloff | 36 |
-
-The MFCC representation uses coefficients C1–C12, excluding C0. Delta coefficients are not included. ZCR is included only once in Group C.
-
-### Classifiers
-
-The initial comparison uses fixed settings across all three feature groups:
-
-- SVM: Gaussian kernel, box constraint `C = 1`, `KernelScale = sqrt(26)`, and one-versus-one multiclass classification.
-- kNN: `k = 5`, Euclidean distance, and equal neighbour weights.
-
-No hyperparameter tuning is performed in the current comparison.
-
-For every fold and feature group, standardization statistics are calculated using the training data only. The same training mean and standard deviation are then applied to the test data.
-
-Any future hyperparameter selection will be performed within the training data, keeping the official test fold separate.
-
-## Evaluation
-
-All feature groups use the same official five folds. Each clip receives exactly one held-out prediction per classifier and feature group.
-
-Reported metrics are:
-
-- Accuracy over all 400 out-of-fold predictions.
-- Macro precision, macro recall, and macro F1, calculated as unweighted averages over the ten classes using pooled out-of-fold predictions.
-- Sample standard deviation of the five fold accuracies.
-- Per-class metrics and confusion matrices.
-
-Macro F1 is the average of class-level F1 scores, not the average of fold-level F1 scores. Fold accuracy standard deviation describes variation across folds; it is not a confidence interval.
-
-## Experimental Records
-
-The current implementation includes the baseline experiment, the three-group feature comparison, and consolidated evaluation tables.
-
-- [Baseline results](baseline_results/run_20261009_025418_395/)
-- [Feature comparison results](feature_comparison_results/run_20261009_031441_478/)
-- [All evaluation metrics](feature_comparison_results/run_20261009_031441_478/step6_all_metrics.csv)
-- [Per-fold results](feature_comparison_results/run_20261009_031441_478/fold_metrics.csv)
-- [Out-of-fold predictions](feature_comparison_results/run_20261009_031441_478/oof_predictions.csv)
-
-Confusion matrices:
-
-- [Group A](feature_comparison_results/run_20261009_031441_478/A_SVM_confusion.png)
-- [Group B](feature_comparison_results/run_20261009_031441_478/B_SVM_confusion.png)
-- [Group C](feature_comparison_results/run_20261009_031441_478/C_SVM_confusion.png)
-
-## Software Requirements
-
-The scripts have been run using MATLAB R2024b with:
-
-- Audio Toolbox.
-- Signal Processing Toolbox.
-- Statistics and Machine Learning Toolbox.
-
-MATLAB's built-in audio feature functions are used where applicable.
-
-## How to Run
-
-1. Download or clone this repository.
-2. Download ESC-50 from the dataset repository.
-3. Place the extracted dataset in a folder named `ESC-50-master` at the project root. The following paths must exist:
-   - `ESC-50-master/audio/`
-   - `ESC-50-master/meta/esc50.csv`
-4. Set MATLAB's Current Folder to the project root.
-5. Run the Live Scripts in the following order.
-
-| Order | Script | Purpose |
-|---|---|---|
-| 1 | `prepare_esc10.mlx` | Validate ESC-10 and save the official fold assignments |
-| 2 | `configure_features.mlx` | Save the audio and feature configuration |
-| 3 | `run_mfcc_zcr_baseline.mlx` | Extract baseline features and evaluate SVM and kNN |
-| 4 | `run_feature_comparison.mlx` | Evaluate feature groups A, B, and C |
-| 5 | `summarize_evaluation_results.mlx` | Produce the consolidated evaluation tables |
-| 6 | `analyze_representative_sounds.mlx` | Generate feature distributions and example plots |
-
-Run each script in full. If prompted, select the project root folder.
-
-New classification runs create timestamped result folders. The `latest_baseline.mat` and `latest_comparison.mat` files identify the runs used by subsequent scripts.
-
-The full audio dataset is not included in this repository. Running the complete pipeline regenerates the preparation files, features, models, and results.
-
-## Repository Contents
+## Repository layout
 
 | Location | Contents |
 |---|---|
-| Root `.mlx` files | Main experiment scripts |
-| `feature_config.mat` | Saved feature configuration |
-| `ESC10_prepared/` | Dataset manifest, class mapping, and official fold assignments |
-| `baseline_results/` | Baseline features, models, predictions, metrics, and figures |
-| `feature_comparison_results/` | Feature comparison results, evaluation summaries, and analysis outputs |
-| `ELEC5305 Project Proposal.pdf` | Original project proposal |
+| `final/code/` | Final experiment: Live Scripts `s0`–`s6` and the helper functions they call |
+| `final/results/` | Results of the final runs (tables, figures, `.mat`), cached noisy features in `noise_features/`, listening examples in `s4_noise_…/examples/` |
+| `final/report/` | Final report (PDF) |
+| root `*.mlx`, `ESC10_prepared/`, `baseline_results/`, `feature_comparison_results/` | Progress-stage pipeline. Its clean features (`features_ABC.mat`) are the input to the final experiment |
 
-The original proposal is retained as the initial project plan. This README describes the implemented study and its current progress.
+## Requirements
 
-## Project Status and Next Steps
+- MATLAB R2024b. R2024a or later is needed for `audioPretrainedNetwork`.
+- Audio Toolbox, Signal Processing Toolbox, Statistics and Machine Learning Toolbox.
+- Deep Learning Toolbox and the YAMNet weights, only for the deep reference (group D). If they are missing, the steps run without group D.
 
-Completed:
+## Data (not included in the repository)
 
-- [x] Project proposal and repository setup.
-- [x] ESC-10 preparation and validation.
-- [x] Reproducible feature configuration.
-- [x] MFCC + ZCR baseline.
-- [x] Initial comparison of three feature groups.
-- [x] Official five-fold evaluation with training-only standardization.
-- [x] Saved predictions, evaluation tables, and confusion matrices.
+1. **ESC-50** (always needed): download from https://github.com/karolpiczak/ESC-50 and place it so that `ESC-50-master/audio/` and `ESC-50-master/meta/esc50.csv` are in the repository root, as for the progress stage.
+2. **YAMNet weights** (only for group D): run `audioPretrainedNetwork("yamnet")` in MATLAB once. If it reports missing files, download https://ssd.mathworks.com/supportfiles/audio/yamnet.zip and unzip it into `final/models/`. The scripts add that folder to the path automatically.
+3. **DEMAND** (only to regenerate the noisy features, steps S3–S5): from https://zenodo.org/records/1227121 download `TCAR_48k.zip`, `STRAFFIC_48k.zip`, `PCAFETER_48k.zip`, `DKITCHEN_48k.zip`, `NRIVER_48k.zip` and `OMEETING_48k.zip`. Unzip them into `final/DEMAND/` so that, for example, `final/DEMAND/TCAR/ch01.wav` exists. Only channel 1 is used.
 
-Planned:
+DEMAND is **not** required to reproduce the results. The noisy features of every clip are cached in `final/results/noise_features/` (about 42 MB), so S4–S6 run from the cache.
 
-- [ ] Extend the analysis of class-level errors and feature contributions.
-- [ ] Assess further improvements using training-data-only model selection.
-- [ ] Discuss limitations and consolidate the experimental findings.
-- [ ] Complete the final report and project documentation.
+## How to run
 
-## Project Proposal
+Set MATLAB's Current Folder to `final/code` and run the Live Scripts in order. No paths need editing:
 
-[Read the original project proposal](ELEC5305%20Project%20Proposal.pdf)
+- each step writes a time-stamped folder in `final/results/` and records it in `latest_<step>.mat`;
+- later steps read those records;
+- the code finds the progress-stage data in the repository root automatically.
+
+| Step | Script | What it does | Needs | Time* |
+|---|---|---|---|---|
+| 0 | `s0_check_environment` | Checks toolboxes, data, DEMAND and YAMNet | – | < 1 min |
+| 1 | `s1_clean_tuned_eval` | Groups T, S, A, B, C on clean data; nested SVM tuning; McNemar tests | `features_ABC.mat` | ~12 min |
+| 2 | `s2_yamnet_clean` | Group D (YAMNet + SVM) on clean data; computational cost | ESC-50, YAMNet | ~6 min |
+| 3 | `s3_prepare_noise` | Verifies the feature extractor; characterises the six noises | ESC-50, DEMAND | ~4 min |
+| 4 | `s4_noise_robustness` | Clean-trained models on noisy test clips (6 noises × 5 SNRs) | S1 (+S2); DEMAND **or** the cache | 2–40 min |
+| 5 | `s5_multicondition` | Multi-condition training, matched and unseen noise types | S1, S4; DEMAND **or** the cache | ~5 min |
+| 6 | `s6_analysis` | Explanatory figures and the summary table | S1, S3, S4 (+S5) | < 1 min |
+
+\*On a laptop CPU. To regenerate only the analysis figures from the included results, run `s6_analysis` alone.
+
+To recompute `features_ABC.mat` from the audio, run the progress-stage scripts in the repository root in this order: `prepare_esc10` → `configure_features` → `run_mfcc_zcr_baseline` → `run_feature_comparison`.
+
+## Main references
+
+- K. J. Piczak, "ESC: Dataset for environmental sound classification," ACM Multimedia 2015.
+- J. Thiemann, N. Ito and E. Vincent, "The Diverse Environments Multi-channel Acoustic Noise Database (DEMAND)," Proc. Meetings on Acoustics 19, 2013.
+- J. F. Gemmeke et al., "Audio Set," ICASSP 2017; S. Hershey et al., "CNN architectures for large-scale audio classification," ICASSP 2017.
+
+The full reference list is in the report.

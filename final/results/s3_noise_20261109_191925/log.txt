@@ -1,0 +1,11 @@
+S3 noise preparation
+Output: C:\Users\70933\Desktop\5305\Project\Project_3\results\s3_noise_20261109_191925
+
+Extractor check: max relative difference 0 over 400 clips (97 s)
+TCAR      300 s | LTAS centroid     26 Hz | flatness 0.000 | <500 Hz 100.0% | >8 kHz   0.0% | level SD 4.7 dB
+STRAFFIC  300 s | LTAS centroid    464 Hz | flatness 0.025 | <500 Hz  91.7% | >8 kHz   2.6% | level SD 4.1 dB
+PCAFETER  300 s | LTAS centroid    572 Hz | flatness 0.038 | <500 Hz  82.0% | >8 kHz   2.3% | level SD 2.3 dB
+DKITCHEN  300 s | LTAS centroid   3971 Hz | flatness 0.189 | <500 Hz  61.3% | >8 kHz  30.6% | level SD 3.7 dB
+NRIVER    300 s | LTAS centroid    109 Hz | flatness 0.006 | <500 Hz  96.5% | >8 kHz   0.2% | level SD 6.7 dB
+OMEETING  300 s | LTAS centroid    668 Hz | flatness 0.049 | <500 Hz  72.4% | >8 kHz   1.8% | level SD 4.6 dB
+Done. Results: C:\Users\70933\Desktop\5305\Project\Project_3\results\s3_noise_20261109_191925

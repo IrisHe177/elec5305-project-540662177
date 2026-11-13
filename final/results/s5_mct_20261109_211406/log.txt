@@ -1,0 +1,4 @@
+S5 multi-condition training. Groups: T, S, A, B, C, D
+Output: C:\Users\70933\Desktop\5305\Project\Project_3\results\s5_mct_20261109_211406
+
+Done. Results: C:\Users\70933\Desktop\5305\Project\Project_3\results\s5_mct_20261109_211406

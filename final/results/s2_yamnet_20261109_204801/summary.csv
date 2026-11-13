@@ -1,0 +1,2 @@
+Group,Dims,Protocol,Accuracy,MacroPrecision,MacroRecall,MacroF1,FoldSD_pp,Seconds
+D,2048,tuned,96.5,96.6433219042408,96.5,96.5127147532471,1.85404962177392,245.5815165

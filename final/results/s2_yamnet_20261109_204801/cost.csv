@@ -1,0 +1,3 @@
+Representation,Dims,LearnedParameters,MedianExtraction_ms_per_clip
+"Handcrafted (A/B/C, all features)",36,0,116.1903
+"YAMNet embeddings",2048,3751369,56.3674

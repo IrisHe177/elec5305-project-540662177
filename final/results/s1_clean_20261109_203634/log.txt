@@ -1,0 +1,10 @@
+S1 clean evaluation
+Output: C:\Users\70933\Desktop\5305\Project\Project_3\results\s1_clean_20261109_203634
+
+T ( 4 dims) | fixed 56.25% | tuned 63.00%, macro-F1 62.54% | tuning 165 s
+S ( 8 dims) | fixed 43.50% | tuned 55.00%, macro-F1 54.61% | tuning 117 s
+A (26 dims) | fixed 64.75% | tuned 69.00%, macro-F1 69.04% | tuning 129 s
+B (12 dims) | fixed 60.75% | tuned 69.25%, macro-F1 69.27% | tuning 123 s
+C (36 dims) | fixed 73.50% | tuned 73.00%, macro-F1 73.01% | tuning 103 s
+
+Done. Results: C:\Users\70933\Desktop\5305\Project\Project_3\results\s1_clean_20261109_203634

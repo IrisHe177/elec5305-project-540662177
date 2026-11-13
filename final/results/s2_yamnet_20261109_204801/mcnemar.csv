@@ -1,0 +1,3 @@
+Model,Reference,CorrectedErrors,IntroducedErrors,DeltaAccuracy_pp,p_exact
+D,A,116,6,27.5,1.60186598142079e-27
+D,C,101,7,23.5,1.84358091904263e-22

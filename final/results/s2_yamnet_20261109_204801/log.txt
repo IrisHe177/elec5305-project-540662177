@@ -1,0 +1,15 @@
+S2 YAMNet
+Embedding layer: global_average_pooling2d | learnable parameters: 3751369
+Output: C:\Users\70933\Desktop\5305\Project\Project_3\results\s2_yamnet_20261109_204801
+
+  embeddings 50/400
+  embeddings 100/400
+  embeddings 150/400
+  embeddings 200/400
+  embeddings 250/400
+  embeddings 300/400
+  embeddings 350/400
+  embeddings 400/400
+
+D (YAMNet, 2048 dims): accuracy 96.50%, macro-F1 96.51%, fold SD 1.85 pp
+Done. Results: C:\Users\70933\Desktop\5305\Project\Project_3\results\s2_yamnet_20261109_204801
