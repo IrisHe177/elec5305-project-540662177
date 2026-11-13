@@ -3,7 +3,7 @@
 ELEC5305 Acoustics, Speech and Signal Processing · The University of Sydney
 Xinran He · SID 540662177
 
-**Final report:** [PDF](final/report/ELEC5305_Final_Report_XinranHe.pdf) · **Video:** [Google Drive](https://drive.google.com/file/d/1HSP13Enzi-fcHtOALvW61lwVB0cJMc0R/view?usp=sharing) · **Proposal:** [PDF](ELEC5305%20Project%20Proposal.pdf) · **Progress report:** [PDF](ELEC5305_Project_Progress_Report.pdf)
+**Final report:** [PDF](final/report/ELEC5305_Final_Report_XinranHe.pdf) · **Video:** [Google Drive](https://drive.google.com/file/d/1HSP13Enzi-fcHtOALvW61lwVB0cJMc0R/view?usp=sharing) · **Code and results:** [final/ on GitHub](https://github.com/IrisHe177/elec5305-project-540662177/tree/main/final) · **Proposal:** [PDF](ELEC5305%20Project%20Proposal.pdf) · **Progress report:** [PDF](ELEC5305_Project_Progress_Report.pdf)
 
 ## Research question
 
@@ -44,11 +44,13 @@ Mean accuracy (%) over the six noises, Gaussian SVM with nested tuning, 400 out-
 
 ## Repository layout
 
+Everything from the final stage is in [`final/`](https://github.com/IrisHe177/elec5305-project-540662177/tree/main/final); the files in the repository root are from the progress stage.
+
 | Location | Contents |
 |---|---|
-| `final/code/` | Final experiment: the seven Live Scripts (run order under *How to run*) and the helper functions they call |
-| `final/results/` | Results of the final runs (tables, figures, `.mat`), cached noisy features in `noise_features/`, listening examples in `s4_noise_…/examples/` |
-| `final/report/` | Final report (PDF) |
+| [`final/code/`](https://github.com/IrisHe177/elec5305-project-540662177/tree/main/final/code) | Final experiment: the seven Live Scripts (run order under *How to run*) and the helper functions they call |
+| [`final/results/`](https://github.com/IrisHe177/elec5305-project-540662177/tree/main/final/results) | Results of the final runs (tables, figures, `.mat`), cached noisy features in `noise_features/`, listening examples in `s4_noise_…/examples/`. The numbers in *Key results* are in [`s6_analysis_20261109_211413/summary_table.csv`](https://github.com/IrisHe177/elec5305-project-540662177/blob/main/final/results/s6_analysis_20261109_211413/summary_table.csv) |
+| [`final/report/`](https://github.com/IrisHe177/elec5305-project-540662177/tree/main/final/report) | Final report ([PDF](final/report/ELEC5305_Final_Report_XinranHe.pdf)) |
 | root `*.mlx`, `ESC10_prepared/`, `baseline_results/`, `feature_comparison_results/` | Progress-stage pipeline. Its clean features (`features_ABC.mat`) are the input to the final experiment |
 
 ## Requirements
