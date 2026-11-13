@@ -61,9 +61,9 @@ Mean accuracy (%) over the six noises, Gaussian SVM with nested tuning, 400 out-
 
 1. **ESC-50** (always needed): download from https://github.com/karolpiczak/ESC-50 and place it so that `ESC-50-master/audio/` and `ESC-50-master/meta/esc50.csv` are in the repository root, as for the progress stage.
 2. **YAMNet weights** (only for group D): run `audioPretrainedNetwork("yamnet")` in MATLAB once. If it reports missing files, download https://ssd.mathworks.com/supportfiles/audio/yamnet.zip and unzip it into `final/models/`. The scripts add that folder to the path automatically.
-3. **DEMAND** (only to regenerate the noisy features, steps S3–S5): from https://zenodo.org/records/1227121 download `TCAR_48k.zip`, `STRAFFIC_48k.zip`, `PCAFETER_48k.zip`, `DKITCHEN_48k.zip`, `NRIVER_48k.zip` and `OMEETING_48k.zip`. Unzip them into `final/DEMAND/` so that, for example, `final/DEMAND/TCAR/ch01.wav` exists. Only channel 1 is used.
+3. **DEMAND** (only to regenerate the noisy features, steps 3–5): from https://zenodo.org/records/1227121 download `TCAR_48k.zip`, `STRAFFIC_48k.zip`, `PCAFETER_48k.zip`, `DKITCHEN_48k.zip`, `NRIVER_48k.zip` and `OMEETING_48k.zip`. Unzip them into `final/DEMAND/` so that, for example, `final/DEMAND/TCAR/ch01.wav` exists. Only channel 1 is used.
 
-DEMAND is **not** required to reproduce the results. The noisy features of every clip are cached in `final/results/noise_features/` (about 42 MB), so S4–S6 run from the cache.
+DEMAND is **not** required to reproduce the results. The noisy features of every clip are cached in `final/results/noise_features/` (about 42 MB), so steps 4–6 run from the cache.
 
 ## How to run
 
@@ -75,15 +75,15 @@ Set MATLAB's Current Folder to `final/code` and run the Live Scripts in order. N
 
 | Step | Script | What it does | Needs | Time* |
 |---|---|---|---|---|
-| 0 | `s0_check_environment` | Checks toolboxes, data, DEMAND and YAMNet | – | < 1 min |
-| 1 | `s1_clean_tuned_eval` | Groups T, S, A, B, C on clean data; nested SVM tuning; McNemar tests | `features_ABC.mat` | ~12 min |
-| 2 | `s2_yamnet_clean` | Group D (YAMNet + SVM) on clean data; computational cost | ESC-50, YAMNet | ~6 min |
-| 3 | `s3_prepare_noise` | Verifies the feature extractor; characterises the six noises | ESC-50, DEMAND | ~4 min |
-| 4 | `s4_noise_robustness` | Clean-trained models on noisy test clips (6 noises × 5 SNRs) | S1 (+S2); DEMAND **or** the cache | 2–40 min |
-| 5 | `s5_multicondition` | Multi-condition training, matched and unseen noise types | S1, S4; DEMAND **or** the cache | ~5 min |
-| 6 | `s6_analysis` | Explanatory figures and the summary table | S1, S3, S4 (+S5) | < 1 min |
+| 0 | `check_environment` | Checks toolboxes, data, DEMAND and YAMNet | – | < 1 min |
+| 1 | `clean_tuned_eval` | Groups T, S, A, B, C on clean data; nested SVM tuning; McNemar tests | `features_ABC.mat` | ~12 min |
+| 2 | `yamnet_clean` | Group D (YAMNet + SVM) on clean data; computational cost | ESC-50, YAMNet | ~6 min |
+| 3 | `prepare_noise` | Verifies the feature extractor; characterises the six noises | ESC-50, DEMAND | ~4 min |
+| 4 | `noise_robustness` | Clean-trained models on noisy test clips (6 noises × 5 SNRs) | steps 1 (+2); DEMAND **or** the cache | 2–40 min |
+| 5 | `multicondition` | Multi-condition training, matched and unseen noise types | steps 1, 4; DEMAND **or** the cache | ~5 min |
+| 6 | `analysis` | Explanatory figures and the summary table | steps 1, 3, 4 (+5) | < 1 min |
 
-\*On a laptop CPU. To regenerate only the analysis figures from the included results, run `s6_analysis` alone.
+\*On a laptop CPU. To regenerate only the analysis figures from the included results, run `analysis` alone.
 
 To recompute `features_ABC.mat` from the audio, run the progress-stage scripts in the repository root in this order: `prepare_esc10` → `configure_features` → `run_mfcc_zcr_baseline` → `run_feature_comparison`.
 
