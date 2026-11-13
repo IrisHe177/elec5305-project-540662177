@@ -3,7 +3,7 @@
 ELEC5305 Acoustics, Speech and Signal Processing · The University of Sydney
 Xinran He · SID 540662177
 
-**Final report:** [final/report/ELEC5305_Final_Report_XinranHe.pdf](final/report/ELEC5305_Final_Report_XinranHe.pdf) · **Video:** _link to be added_ · **Proposal:** [PDF](ELEC5305%20Project%20Proposal.pdf) · **Progress report:** [PDF](ELEC5305_Project_Progress_Report.pdf)
+**Final report:** [PDF](final/report/ELEC5305_Final_Report_XinranHe.pdf) · **Video:** [Google Drive](https://drive.google.com/file/d/1HSP13Enzi-fcHtOALvW61lwVB0cJMc0R/view?usp=sharing) · **Proposal:** [PDF](ELEC5305%20Project%20Proposal.pdf) · **Progress report:** [PDF](ELEC5305_Project_Progress_Report.pdf)
 
 ## Research question
 
